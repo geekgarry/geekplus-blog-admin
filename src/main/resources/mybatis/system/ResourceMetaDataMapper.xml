@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.ResourceMetaDataMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.ResourceMetaData">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="originalFileName" column="original_file_name" jdbcType="VARCHAR" />
+        <result property="storedFileName" column="stored_file_name" jdbcType="VARCHAR" />
+        <result property="actualStoragePath" column="actual_storage_path" jdbcType="VARCHAR" />
+        <result property="logicalPath" column="logical_path" jdbcType="VARCHAR" />
+        <result property="contentType" column="content_type" jdbcType="VARCHAR" />
+        <result property="ownerUserId" column="owner_user_id" jdbcType="INTEGER" />
+        <result property="relatedEntityId" column="related_entity_id" jdbcType="VARCHAR" />
+        <result property="accessLevel" column="access_level" jdbcType="VARCHAR" />
+        <result property="isAvailable" column="is_available" jdbcType="INTEGER" />
+        <result property="entityType" column="entity_type" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--资源数据表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        id,original_file_name,stored_file_name,actual_storage_path,logical_path,content_type,owner_user_id,related_entity_id,access_level,is_available,entity_type
+         from resource_meta_data
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectResourceMetaDataVo">
+        select
+        rmd.id,rmd.original_file_name,rmd.stored_file_name,rmd.actual_storage_path,rmd.logical_path,rmd.content_type,rmd.owner_user_id,rmd.related_entity_id,rmd.access_level,rmd.is_available,rmd.entity_type
+         from resource_meta_data rmd
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectResourceMetaDataList" parameterType="ResourceMetaData" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null ">
+         AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="originalFileName !=null  and originalFileName != ''">
+         AND original_file_name = #{originalFileName,jdbcType=VARCHAR}
+        </if>
+        <if test="storedFileName !=null  and storedFileName != ''">
+         AND stored_file_name = #{storedFileName,jdbcType=VARCHAR}
+        </if>
+        <if test="actualStoragePath !=null  and actualStoragePath != ''">
+         AND actual_storage_path = #{actualStoragePath,jdbcType=VARCHAR}
+        </if>
+        <if test="logicalPath !=null  and logicalPath != ''">
+         AND logical_path = #{logicalPath,jdbcType=VARCHAR}
+        </if>
+        <if test="contentType !=null  and contentType != ''">
+         AND content_type = #{contentType,jdbcType=VARCHAR}
+        </if>
+        <if test="ownerUserId !=null ">
+         AND owner_user_id = #{ownerUserId,jdbcType=INTEGER}
+        </if>
+        <if test="relatedEntityId !=null  and relatedEntityId != ''">
+         AND related_entity_id = #{relatedEntityId,jdbcType=VARCHAR}
+        </if>
+        <if test="accessLevel !=null  and accessLevel != ''">
+         AND access_level = #{accessLevel,jdbcType=VARCHAR}
+        </if>
+        <if test="isAvailable !=null  and isAvailable != ''">
+         AND is_available = #{isAvailable,jdbcType=INTEGER}
+        </if>
+        <if test="entityType !=null ">
+         AND entity_type = #{entityType,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionResourceMetaDataList" parameterType="ResourceMetaDataDto" resultMap="BaseResultMap">
+        <include refid="selectResourceMetaDataVo"/>
+        <where>
+        <if test="id !=null ">
+         AND rmd.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="originalFileName !=null  and originalFileName != ''">
+         AND rmd.original_file_name = #{originalFileName,jdbcType=VARCHAR}
+        </if>
+        <if test="storedFileName !=null  and storedFileName != ''">
+         AND rmd.stored_file_name = #{storedFileName,jdbcType=VARCHAR}
+        </if>
+        <if test="actualStoragePath !=null  and actualStoragePath != ''">
+         AND rmd.actual_storage_path = #{actualStoragePath,jdbcType=VARCHAR}
+        </if>
+        <if test="logicalPath !=null  and logicalPath != ''">
+         AND rmd.logical_path = #{logicalPath,jdbcType=VARCHAR}
+        </if>
+        <if test="contentType !=null  and contentType != ''">
+         AND rmd.content_type = #{contentType,jdbcType=VARCHAR}
+        </if>
+        <if test="ownerUserId !=null ">
+         AND rmd.owner_user_id = #{ownerUserId,jdbcType=INTEGER}
+        </if>
+        <if test="relatedEntityId !=null  and relatedEntityId != ''">
+         AND rmd.related_entity_id = #{relatedEntityId,jdbcType=VARCHAR}
+        </if>
+        <if test="accessLevel !=null  and accessLevel != ''">
+         AND rmd.access_level = #{accessLevel,jdbcType=VARCHAR}
+        </if>
+        <if test="isAvailable !=null  and isAvailable != ''">
+         AND rmd.is_available = #{isAvailable,jdbcType=VARCHAR}
+        </if>
+        <if test="entityType !=null ">
+         AND rmd.entity_type = #{entityType,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectResourceMetaDataById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertResourceMetaData" parameterType="ResourceMetaDataDto" useGeneratedKeys="true" keyProperty="id">
+        insert into resource_meta_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="originalFileName != null and originalFileName != ''">original_file_name,</if>
+        <if test="storedFileName != null and storedFileName != ''">stored_file_name,</if>
+        <if test="actualStoragePath != null and actualStoragePath != ''">actual_storage_path,</if>
+        <if test="logicalPath != null and logicalPath != ''">logical_path,</if>
+        <if test="contentType != null and contentType != ''">content_type,</if>
+        <if test="ownerUserId != null">owner_user_id,</if>
+        <if test="relatedEntityId != null and relatedEntityId != ''">related_entity_id,</if>
+        <if test="accessLevel != null and accessLevel != ''">access_level,</if>
+        <if test="isAvailable != null and isAvailable != ''">is_available,</if>
+        <if test="entityType != null">entity_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="originalFileName != null and originalFileName != ''">#{originalFileName},</if>
+        <if test="storedFileName != null and storedFileName != ''">#{storedFileName},</if>
+        <if test="actualStoragePath != null and actualStoragePath != ''">#{actualStoragePath},</if>
+        <if test="logicalPath != null and logicalPath != ''">#{logicalPath},</if>
+        <if test="contentType != null and contentType != ''">#{contentType},</if>
+        <if test="ownerUserId != null">#{ownerUserId},</if>
+        <if test="relatedEntityId != null and relatedEntityId != ''">#{relatedEntityId},</if>
+        <if test="accessLevel != null and accessLevel != ''">#{accessLevel},</if>
+        <if test="isAvailable != null and isAvailable != ''">#{isAvailable},</if>
+        <if test="entityType != null">#{entityType},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertResourceMetaDataList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="id">
+        insert into resource_meta_data
+        (
+        original_file_name,stored_file_name,actual_storage_path,logical_path,content_type,owner_user_id,related_entity_id,access_level,is_available,entity_type
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.originalFileName},#{item.storedFileName},#{item.actualStoragePath},#{item.logicalPath},#{item.contentType},#{item.ownerUserId},#{item.relatedEntityId},#{item.accessLevel},#{item.isAvailable},#{item.entityType}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteResourceMetaDataById" parameterType="Long">
+        delete FROM resource_meta_data where id = #{id}
+    </delete>
+
+
+    <!--批量删除操作SQL-->
+    <delete id="deleteResourceMetaDataByIds" parameterType="Long">
+        delete FROM resource_meta_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateResourceMetaByFilePath" parameterType="ResourceMetaData">
+        update resource_meta_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="originalFileName != null  and originalFileName != ''">original_file_name = #{originalFileName},</if>
+            <if test="storedFileName != null  and storedFileName != ''">stored_file_name = #{storedFileName},</if>
+            <if test="actualStoragePath != null  and actualStoragePath != ''">actual_storage_path = #{actualStoragePath},</if>
+            <if test="contentType != null  and contentType != ''">content_type = #{contentType},</if>
+            <if test="ownerUserId != null ">owner_user_id = #{ownerUserId},</if>
+            <if test="relatedEntityId != null  and relatedEntityId != ''">related_entity_id = #{relatedEntityId},</if>
+            <if test="accessLevel != null  and accessLevel != ''">access_level = #{accessLevel},</if>
+            <if test="isAvailable != null  and isAvailable != ''">is_available = #{isAvailable},</if>
+            <if test="entityType != null ">entity_type = #{entityType},</if>
+        </trim>
+        where logical_path = #{logicalPath}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateResourceMetaListByFilePath" parameterType="ResourceMetaDataDto">
+        update resource_meta_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="originalFileName != null  and originalFileName != ''">original_file_name = #{originalFileName},</if>
+            <if test="storedFileName != null  and storedFileName != ''">stored_file_name = #{storedFileName},</if>
+            <if test="actualStoragePath != null  and actualStoragePath != ''">actual_storage_path = #{actualStoragePath},</if>
+            <if test="contentType != null  and contentType != ''">content_type = #{contentType},</if>
+            <if test="ownerUserId != null ">owner_user_id = #{ownerUserId},</if>
+            <if test="relatedEntityId != null  and relatedEntityId != ''">related_entity_id = #{relatedEntityId},</if>
+            <if test="accessLevel != null  and accessLevel != ''">access_level = #{accessLevel},</if>
+            <if test="isAvailable != null  and isAvailable != ''">is_available = #{isAvailable},</if>
+            <if test="entityType != null ">entity_type = #{entityType},</if>
+        </trim>
+        where logical_path in
+        <foreach collection="logicalPaths" index="index" item="logicalPath"  open="(" close=")" separator=",">
+            #{logicalPath}
+        </foreach>
+    </update>
+
+    <!--更新操作SQL-->
+    <update id="updateResourceMetaData" parameterType="ResourceMetaDataDto">
+        update resource_meta_data
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="originalFileName != null  and originalFileName != ''">original_file_name = #{originalFileName},</if>
+        <if test="storedFileName != null  and storedFileName != ''">stored_file_name = #{storedFileName},</if>
+        <if test="actualStoragePath != null  and actualStoragePath != ''">actual_storage_path = #{actualStoragePath},</if>
+        <if test="logicalPath != null  and logicalPath != ''">logical_path = #{logicalPath},</if>
+        <if test="contentType != null  and contentType != ''">content_type = #{contentType},</if>
+        <if test="ownerUserId != null ">owner_user_id = #{ownerUserId},</if>
+        <if test="relatedEntityId != null  and relatedEntityId != ''">related_entity_id = #{relatedEntityId},</if>
+        <if test="accessLevel != null  and accessLevel != ''">access_level = #{accessLevel},</if>
+        <if test="isAvailable != null  and isAvailable != ''">is_available = #{isAvailable},</if>
+        <if test="entityType != null ">entity_type = #{entityType},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateResourceMetaDataList" >
+        update resource_meta_data set
+        id='',original_file_name='',stored_file_name='',actual_storage_path='',logical_path='',content_type='',owner_user_id='',related_entity_id='',access_level='',is_available='',entity_type=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

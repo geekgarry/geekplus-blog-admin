@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysDictMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysDict">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="dictName" column="dict_name" jdbcType="CHAR" />
+        <result property="dictCode" column="dict_code" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="CHAR" />
+        <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="remarks" column="remarks" jdbcType="VARCHAR" />
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--数据字典-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        id,dict_name,dict_code,status,create_by,create_time,update_by,update_time,remarks,del_flag
+         from sys_dict
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysDictVo">
+        select
+        sd.id,sd.dict_name,sd.dict_code,sd.status,sd.create_by,sd.create_time,sd.update_by,sd.update_time,sd.remarks,sd.del_flag
+         from sys_dict sd
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysDictList" parameterType="SysDict" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null ">
+         AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="dictName !=null  and dictName != ''">
+         AND dict_name = #{dictName,jdbcType=CHAR}
+        </if>
+        <if test="dictCode !=null  and dictCode != ''">
+         AND dict_code = #{dictCode,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null  and status != ''">
+         AND status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="remarks !=null  and remarks != ''">
+         AND remarks = #{remarks,jdbcType=VARCHAR}
+        </if>
+        <if test="delFlag !=null ">
+         AND del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionSysDictList" parameterType="SysDict" resultMap="BaseResultMap">
+        <include refid="selectSysDictVo"/>
+        <where>
+        <if test="id !=null ">
+         AND sd.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="dictName !=null  and dictName != ''">
+         AND sd.dict_name = #{dictName,jdbcType=CHAR}
+        </if>
+        <if test="dictCode !=null  and dictCode != ''">
+         AND sd.dict_code = #{dictCode,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null  and status != ''">
+         AND sd.status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND sd.create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND sd.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND sd.update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND sd.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="remarks !=null  and remarks != ''">
+         AND sd.remarks = #{remarks,jdbcType=VARCHAR}
+        </if>
+        <if test="delFlag !=null ">
+         AND sd.del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysDictById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <select id="selectDictTypeAll" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysDict" parameterType="SysDict"  useGeneratedKeys="true" keyProperty="id">
+        insert into sys_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="dictName != null and dictName != ''">dict_name,</if>
+        <if test="dictCode != null and dictCode != ''">dict_code,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time,
+        <if test="updateBy != null and updateBy != ''">update_by,</if>
+        <if test="updateTime != null">update_time,</if>
+        <if test="remarks != null and remarks != ''">remarks,</if>
+        <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="dictName != null and dictName != ''">#{dictName},</if>
+        <if test="dictCode != null and dictCode != ''">#{dictCode},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        SYSDATE(),
+        <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+        <if test="updateTime != null">#{updateTime},</if>
+        <if test="remarks != null and remarks != ''">#{remarks},</if>
+        <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysDictList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="id">
+        insert into sys_dict
+        (
+        dict_name,dict_code,status,create_by,create_time,update_by,update_time,remarks,del_flag
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.dictName},#{item.dictCode},#{item.status},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.remarks},#{item.delFlag}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysDictById" parameterType="Long">
+        delete FROM sys_dict where id = #{id}
+    </delete>
+
+    <!--逻辑删除,更新删除字段-->
+    <update id="updateDelFlagById" parameterType="Long">
+        update sys_dict set del_flag=1 where id = #{id}
+    </update>
+
+    <!--批量删除操作SQL-->
+    <delete id="deleteSysDictByIds" parameterType="Long">
+        delete FROM sys_dict where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除,批量更新删除字段-->
+    <update id="updateDelFlagByIds" parameterType="Long">
+        update sys_dict set del_flag=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+          #{id}
+        </foreach>
+    </update>
+
+    <!--更新操作SQL-->
+    <update id="updateSysDict" parameterType="SysDict">
+        update sys_dict
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="dictName != null  and dictName != ''">dict_name = #{dictName},</if>
+        <if test="dictCode != null  and dictCode != ''">dict_code = #{dictCode},</if>
+        <if test="status != null  and status != ''">status = #{status},</if>
+        <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        update_time = SYSDATE(),
+        <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+        <if test="delFlag != null ">del_flag = #{delFlag},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysDictList" >
+        update sys_dict set
+        id='',dict_name='',dict_code='',status='',create_by='',create_time='',update_by='',update_time='',remarks='',del_flag=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

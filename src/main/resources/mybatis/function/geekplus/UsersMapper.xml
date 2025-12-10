@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.function.mapper.UsersMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.function.entity.Users">
+        <result property="userId" column="user_id" jdbcType="INTEGER" />
+        <result property="username" column="username" jdbcType="VARCHAR" />
+        <result property="nickname" column="nickname" jdbcType="VARCHAR" />
+        <result property="userLevel" column="user_level" jdbcType="INTEGER" />
+        <result property="email" column="email" jdbcType="VARCHAR" />
+        <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR" />
+        <result property="gender" column="gender" jdbcType="INTEGER" />
+        <result property="avatar" column="avatar" jdbcType="VARCHAR" />
+        <result property="password" column="password" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="INTEGER" />
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR" />
+        <result property="loginAddress" column="login_address" jdbcType="VARCHAR" />
+        <result property="loginTime" column="login_time" jdbcType="TIMESTAMP" />
+        <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--用户信息表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        user_id,username,nickname,user_level,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_address,login_time,create_by,create_time,update_by,update_time,remark
+         from users
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectUsersVo">
+        select
+        u.user_id,u.username,u.nickname,u.user_level,u.email,u.phone_number,u.gender,u.avatar,u.password,u.status,u.del_flag,u.login_ip,u.login_address,u.login_time,u.create_by,u.create_time,u.update_by,u.update_time,u.remark
+         from users u
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectUsersList" parameterType="Users" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="userId !=null ">
+         AND user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="username !=null  and username != ''">
+         AND username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="nickname !=null  and nickname != ''">
+         AND nickname = #{nickname,jdbcType=VARCHAR}
+        </if>
+        <if test="userLevel !=null ">
+         AND user_level = #{userLevel,jdbcType=INTEGER}
+        </if>
+        <if test="email !=null  and email != ''">
+         AND email = #{email,jdbcType=VARCHAR}
+        </if>
+        <if test="phoneNumber !=null  and phoneNumber != ''">
+         AND phone_number = #{phoneNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="gender !=null ">
+         AND gender = #{gender,jdbcType=INTEGER}
+        </if>
+        <if test="avatar !=null  and avatar != ''">
+         AND avatar = #{avatar,jdbcType=VARCHAR}
+        </if>
+        <if test="password !=null  and password != ''">
+         AND password = #{password,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null ">
+         AND status = #{status,jdbcType=INTEGER}
+        </if>
+        <if test="delFlag !=null ">
+         AND del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="loginIp !=null  and loginIp != ''">
+         AND login_ip = #{loginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="loginAddress !=null  and loginAddress != ''">
+         AND login_address = #{loginAddress,jdbcType=VARCHAR}
+        </if>
+        <if test="loginTime !=null ">
+         AND login_time = #{loginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="remark !=null  and remark != ''">
+         AND remark = #{remark,jdbcType=VARCHAR}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionUsersList" parameterType="Users" resultMap="BaseResultMap">
+        <include refid="selectUsersVo"/>
+        <where>
+        <if test="userId !=null ">
+         AND u.user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="username !=null  and username != ''">
+         AND u.username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="nickname !=null  and nickname != ''">
+         AND u.nickname = #{nickname,jdbcType=VARCHAR}
+        </if>
+        <if test="userLevel !=null ">
+         AND u.user_level = #{userLevel,jdbcType=INTEGER}
+        </if>
+        <if test="email !=null  and email != ''">
+         AND u.email = #{email,jdbcType=VARCHAR}
+        </if>
+        <if test="phoneNumber !=null  and phoneNumber != ''">
+         AND u.phone_number = #{phoneNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="gender !=null ">
+         AND u.gender = #{gender,jdbcType=INTEGER}
+        </if>
+        <if test="avatar !=null  and avatar != ''">
+         AND u.avatar = #{avatar,jdbcType=VARCHAR}
+        </if>
+        <if test="password !=null  and password != ''">
+         AND u.password = #{password,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null ">
+         AND u.status = #{status,jdbcType=INTEGER}
+        </if>
+        <if test="delFlag !=null ">
+         AND u.del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="loginIp !=null  and loginIp != ''">
+         AND u.login_ip = #{loginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="loginAddress !=null  and loginAddress != ''">
+         AND u.login_address = #{loginAddress,jdbcType=VARCHAR}
+        </if>
+        <if test="loginTime !=null ">
+         AND u.login_time = #{loginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND u.create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND u.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND u.update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND u.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="remark !=null  and remark != ''">
+         AND u.remark = #{remark,jdbcType=VARCHAR}
+        </if>
+        </where>
+    </select>
+
+    <!--用作客户端用户登录-->
+    <select id="selectUsersForLogin" parameterType="Users" resultMap="BaseResultMap">
+        select
+        u.user_id,u.username,u.nickname,u.user_level,u.email,u.phone_number,u.gender,u.avatar,u.password,u.status,u.login_ip,u.login_address,u.login_time,u.create_time,u.remark
+         from users u
+         <where>
+             <if test="username !=null  and username != ''">
+                 AND u.username = #{username,jdbcType=VARCHAR}
+             </if>
+             <if test="nickname !=null  and nickname != ''">
+                 AND u.nickname = #{nickname,jdbcType=VARCHAR}
+             </if>
+             <if test="userLevel !=null ">
+                 AND u.user_level = #{userLevel,jdbcType=INTEGER}
+             </if>
+             <if test="email !=null  and email != ''">
+                 AND u.email = #{email,jdbcType=VARCHAR}
+             </if>
+             <if test="phoneNumber !=null  and phoneNumber != ''">
+                 AND u.phone_number = #{phoneNumber,jdbcType=VARCHAR}
+             </if>
+             <if test="gender !=null ">
+                 AND u.gender = #{gender,jdbcType=INTEGER}
+             </if>
+             <if test="avatar !=null  and avatar != ''">
+                 AND u.avatar = #{avatar,jdbcType=VARCHAR}
+             </if>
+             <if test="password !=null  and password != ''">
+                 AND u.password = #{password,jdbcType=VARCHAR}
+             </if>
+         </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectUsersById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        user_id = #{userId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertUsers" parameterType="Users" >
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="userId != null">user_id,</if>
+        <if test="username != null and username != ''">username,</if>
+        <if test="nickname != null and nickname != ''">nickname,</if>
+        <if test="userLevel != null">user_level,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
+        <if test="gender != null">gender,</if>
+        <if test="avatar != null and avatar != ''">avatar,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="status != null">status,</if>
+        <if test="delFlag != null">del_flag,</if>
+        <if test="loginIp != null and loginIp != ''">login_ip,</if>
+        <if test="loginAddress != null and loginAddress != ''">login_address,</if>
+        <if test="loginTime != null">login_time,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time,
+        <if test="updateBy != null and updateBy != ''">update_by,</if>
+        <if test="updateTime != null">update_time,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="userId != null">#{userId},</if>
+        <if test="username != null and username != ''">#{username},</if>
+        <if test="nickname != null and nickname != ''">#{nickname},</if>
+        <if test="userLevel != null">#{userLevel},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+        <if test="gender != null">#{gender},</if>
+        <if test="avatar != null and avatar != ''">#{avatar},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="status != null">#{status},</if>
+        <if test="delFlag != null">#{delFlag},</if>
+        <if test="loginIp != null and loginIp != ''">#{loginIp},</if>
+        <if test="loginAddress != null and loginAddress != ''">#{loginAddress},</if>
+        <if test="loginTime != null">#{loginTime},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        SYSDATE(),
+        <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+        <if test="updateTime != null">#{updateTime},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertUsersList" parameterType="java.util.List" >
+        insert into users
+        (        user_id,username,nickname,user_level,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_address,login_time,create_by,create_time,update_by,update_time,remark
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (        #{item.userId},#{item.username},#{item.nickname},#{item.userLevel},#{item.email},#{item.phoneNumber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginAddress},#{item.loginTime},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteUsersById" parameterType="Long">
+        delete FROM users where user_id = #{userId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteUsersById2" parameterType="Long">
+        update users set del_flag='2' where user_id = #{userId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteUsersByIds" parameterType="Long">
+        delete FROM users where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+             #{userId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteUsersByIds2" parameterType="Long">
+        update users set del_flag='2' where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateUsers" parameterType="Users">
+        update users
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="username != null  and username != ''">username = #{username},</if>
+        <if test="nickname != null  and nickname != ''">nickname = #{nickname},</if>
+        <if test="userLevel != null ">user_level = #{userLevel},</if>
+        <if test="email != null  and email != ''">email = #{email},</if>
+        <if test="phoneNumber != null  and phoneNumber != ''">phone_number = #{phoneNumber},</if>
+        <if test="gender != null ">gender = #{gender},</if>
+        <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+        <if test="password != null  and password != ''">password = #{password},</if>
+        <if test="status != null ">status = #{status},</if>
+        <if test="delFlag != null ">del_flag = #{delFlag},</if>
+        <if test="loginIp != null  and loginIp != ''">login_ip = #{loginIp},</if>
+        <if test="loginAddress != null  and loginAddress != ''">login_address = #{loginAddress},</if>
+        <if test="loginTime != null ">login_time = #{loginTime},</if>
+        <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        update_time = SYSDATE(),
+        <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+         where user_id = #{userId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateUsersList" >
+        update users set
+        user_id='',username='',nickname='',user_level='',email='',phone_number='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_address='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
+         where user_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

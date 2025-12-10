@@ -1,0 +1,102 @@
+package com.geekplus.webapp.function.controller;
+
+import com.geekplus.common.annotation.Log;
+import com.geekplus.common.core.controller.BaseController;
+import com.geekplus.common.domain.Result;
+import com.geekplus.common.page.PageDataInfo;
+import com.geekplus.common.enums.BusinessType;
+//import com.geekplus.common.util.poi.ExcelUtil;
+import com.geekplus.common.util.poi.ExcelUtil;
+import com.geekplus.webapp.function.entity.GpUserComment;
+import com.geekplus.webapp.function.service.IGpArticleCommentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 用户评论回复留言Controller
+ *
+ * @author 佚名
+ * @date 2023-03-12
+ */
+@RestController
+@RequestMapping("/geekplus/articlecomment")
+public class GpArticleCommentController extends BaseController
+{
+    @Autowired
+    private IGpArticleCommentService gpArticleCommentService;
+
+    /**
+     * 查询用户评论回复留言列表
+     */
+    @GetMapping("/list")
+    public PageDataInfo list(GpUserComment gpUserComment)
+    {
+        startPage();
+        gpUserComment.setParentId(Long.parseLong("0"));
+        List<GpUserComment> list = gpArticleCommentService.selectGpArticleCommentList(gpUserComment);//selectGpUserCommentList(gpUserComment);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询用户评论回复留言列表
+     */
+    @GetMapping("/userComment")
+    public Result articleComment(GpUserComment gpUserComment)
+    {
+        List<GpUserComment> list = gpArticleCommentService.selectGpArticleCommentList(gpUserComment);
+        return Result.success(list);
+    }
+
+    /**
+     * 导出用户评论回复留言列表
+     */
+    @Log(title = "用户评论回复留言", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public Result export(GpUserComment gpUserComment)
+    {
+        List<GpUserComment> list = gpArticleCommentService.selectGpArticleCommentList(gpUserComment);
+        ExcelUtil<GpUserComment> util = new ExcelUtil<GpUserComment>(GpUserComment.class);
+        return util.exportExcel(list, "comment");
+    }
+
+    /**
+     * 获取用户评论回复留言详细信息
+     */
+    @GetMapping(value = "/{id}")
+    public Result getInfo(@PathVariable("id") Long id)
+    {
+        return Result.success(gpArticleCommentService.selectGpArticleCommentById(id));
+    }
+
+    /**
+     * 新增用户评论回复留言
+     */
+    @Log(title = "用户评论回复留言", businessType = BusinessType.INSERT)
+    @PostMapping
+    public Result add(@RequestBody GpUserComment gpUserComment)
+    {
+        return toResult(gpArticleCommentService.insertGpArticleComment(gpUserComment));
+    }
+
+    /**
+     * 修改用户评论回复留言
+     */
+    @Log(title = "用户评论回复留言", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public Result edit(@RequestBody GpUserComment gpUserComment)
+    {
+        return toResult(gpArticleCommentService.updateGpArticleComment(gpUserComment));
+    }
+
+    /**
+     * 删除用户评论回复留言
+     */
+    @Log(title = "用户评论回复留言", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{ids}")
+    public Result remove(@PathVariable Long[] ids)
+    {
+        return toResult(gpArticleCommentService.deleteGpArticleCommentByIds(ids));
+    }
+}

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.function.mapper.RemindTaskMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.function.entity.RemindTask">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="userId" column="user_id" jdbcType="VARCHAR" />
+        <result property="taskTitle" column="task_title" jdbcType="VARCHAR" />
+        <result property="taskContent" column="task_content" jdbcType="VARCHAR" />
+        <result property="taskType" column="task_type" jdbcType="INTEGER" />
+        <result property="taskStatus" column="task_status" jdbcType="INTEGER" />
+        <result property="deadline" column="deadline" jdbcType="TIMESTAMP" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="isRemind" column="is_remind" jdbcType="INTEGER" />
+        <result property="remindTime" column="remind_time" jdbcType="TIMESTAMP" />
+        <result property="isRepeat" column="is_repeat" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--提醒任务-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select 
+        id,user_id,task_title,task_content,task_type,task_status,deadline,create_time,is_remind,remind_time,is_repeat
+         from remind_task
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectRemindTaskVo">
+        select 
+        rt.id,rt.user_id,rt.task_title,rt.task_content,rt.task_type,rt.task_status,rt.deadline,rt.create_time,rt.is_remind,rt.remind_time,rt.is_repeat
+         from remind_task rt
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectRemindTaskList" parameterType="RemindTask" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null ">
+         AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null  and userId != ''">
+         AND user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="taskTitle !=null  and taskTitle != ''">
+         AND task_title = #{taskTitle,jdbcType=VARCHAR}
+        </if>
+        <if test="taskContent !=null  and taskContent != ''">
+         AND task_content = #{taskContent,jdbcType=VARCHAR}
+        </if>
+        <if test="taskType !=null ">
+         AND task_type = #{taskType,jdbcType=INTEGER}
+        </if>
+        <if test="taskStatus !=null ">
+         AND task_status = #{taskStatus,jdbcType=INTEGER}
+        </if>
+        <if test="deadline !=null ">
+         AND deadline = #{deadline,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isRemind !=null ">
+         AND is_remind = #{isRemind,jdbcType=INTEGER}
+        </if>
+        <if test="remindTime !=null ">
+         AND remind_time = #{remindTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isRepeat !=null ">
+         AND is_repeat = #{isRepeat,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionRemindTaskList" parameterType="RemindTask" resultMap="BaseResultMap">
+        <include refid="selectRemindTaskVo"/>
+        <where>
+        <if test="id !=null ">
+         AND rt.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null  and userId != ''">
+         AND rt.user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="taskTitle !=null  and taskTitle != ''">
+         AND rt.task_title = #{taskTitle,jdbcType=VARCHAR}
+        </if>
+        <if test="taskContent !=null  and taskContent != ''">
+         AND rt.task_content = #{taskContent,jdbcType=VARCHAR}
+        </if>
+        <if test="taskType !=null ">
+         AND rt.task_type = #{taskType,jdbcType=INTEGER}
+        </if>
+        <if test="taskStatus !=null ">
+         AND rt.task_status = #{taskStatus,jdbcType=INTEGER}
+        </if>
+        <if test="deadline !=null ">
+         AND rt.deadline = #{deadline,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime !=null ">
+         AND rt.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isRemind !=null ">
+         AND rt.is_remind = #{isRemind,jdbcType=INTEGER}
+        </if>
+        <if test="remindTime !=null ">
+         AND rt.remind_time = #{remindTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isRepeat !=null ">
+         AND rt.is_repeat = #{isRepeat,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectRemindTaskById" parameterType="Integer" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertRemindTask" parameterType="RemindTask"  useGeneratedKeys="true" keyProperty="id">
+        insert into remind_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="userId != null and userId != ''">user_id,</if>
+        <if test="taskTitle != null and taskTitle != ''">task_title,</if>
+        <if test="taskContent != null and taskContent != ''">task_content,</if>
+        <if test="taskType != null">task_type,</if>
+        <if test="taskStatus != null">task_status,</if>
+        <if test="deadline != null">deadline,</if>
+        create_time,
+        <if test="isRemind != null">is_remind,</if>
+        <if test="remindTime != null">remind_time,</if>
+        <if test="isRepeat != null">is_repeat,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="taskTitle != null and taskTitle != ''">#{taskTitle},</if>
+        <if test="taskContent != null and taskContent != ''">#{taskContent},</if>
+        <if test="taskType != null">#{taskType},</if>
+        <if test="taskStatus != null">#{taskStatus},</if>
+        <if test="deadline != null">#{deadline},</if>
+        SYSDATE(),
+        <if test="isRemind != null">#{isRemind},</if>
+        <if test="remindTime != null">#{remindTime},</if>
+        <if test="isRepeat != null">#{isRepeat},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertRemindTaskList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="id">
+        insert into remind_task
+        (
+        user_id,task_title,task_content,task_type,task_status,deadline,create_time,is_remind,remind_time,is_repeat
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.userId},#{item.taskTitle},#{item.taskContent},#{item.taskType},#{item.taskStatus},#{item.deadline},#{item.createTime},#{item.isRemind},#{item.remindTime},#{item.isRepeat}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteRemindTaskById" parameterType="Integer">
+        delete FROM remind_task where id = #{id}
+    </delete>
+
+
+    <!--批量删除操作SQL-->
+    <delete id="deleteRemindTaskByIds" parameterType="Integer">
+        delete FROM remind_task where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+
+    <!--更新操作SQL-->
+    <update id="updateRemindTask" parameterType="RemindTask">
+        update remind_task
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+        <if test="taskTitle != null  and taskTitle != ''">task_title = #{taskTitle},</if>
+        <if test="taskContent != null  and taskContent != ''">task_content = #{taskContent},</if>
+        <if test="taskType != null ">task_type = #{taskType},</if>
+        <if test="taskStatus != null ">task_status = #{taskStatus},</if>
+        <if test="deadline != null ">deadline = #{deadline},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        <if test="isRemind != null ">is_remind = #{isRemind},</if>
+        <if test="remindTime != null ">remind_time = #{remindTime},</if>
+        <if test="isRepeat != null ">is_repeat = #{isRepeat},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateRemindTaskList" >
+        update remind_task set
+        id='',user_id='',task_title='',task_content='',task_type='',task_status='',deadline='',create_time='',is_remind='',remind_time='',is_repeat=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.function.mapper.GpMusicMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.function.entity.GpMusic">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="name" column="name" jdbcType="VARCHAR" />
+        <result property="artist" column="artist" jdbcType="VARCHAR" />
+        <result property="url" column="url" jdbcType="VARCHAR" />
+        <result property="cover" column="cover" jdbcType="VARCHAR" />
+        <result property="lrc" column="lrc" jdbcType="VARCHAR" />
+        <result property="orderId" column="order_id" jdbcType="INTEGER" />
+        <result property="isDisplay" column="is_display" jdbcType="INTEGER" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!--在线音乐-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        id,name,artist,url,cover,lrc,order_id,is_display,create_time,update_time
+         from gp_music
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectGpMusicVo">
+        select
+        gm.id,gm.name,gm.artist,gm.url,gm.cover,gm.lrc,gm.order_id,gm.is_display,gm.create_time,gm.update_time
+         from gp_music gm
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectGpMusicList" parameterType="GpMusic" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null ">
+         AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="name !=null  and name != ''">
+         AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="artist !=null  and artist != ''">
+         AND artist = #{artist,jdbcType=VARCHAR}
+        </if>
+        <if test="url !=null  and url != ''">
+         AND url = #{url,jdbcType=VARCHAR}
+        </if>
+        <if test="cover !=null  and cover != ''">
+         AND cover = #{cover,jdbcType=VARCHAR}
+        </if>
+        <if test="lrc !=null  and lrc != ''">
+         AND lrc = #{lrc,jdbcType=VARCHAR}
+        </if>
+        <if test="orderId !=null">
+         AND order_id = #{orderId,jdbcType=INTEGER}
+        </if>
+        <if test="isDisplay !=null">
+         AND is_display = #{isDisplay,jdbcType=INTEGER}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateTime !=null ">
+         AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        </where>
+        order by order_id asc
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionGpMusicList" parameterType="GpMusic" resultMap="BaseResultMap">
+        <include refid="selectGpMusicVo"/>
+        <where>
+        <if test="id !=null ">
+         AND gm.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="name !=null  and name != ''">
+         AND gm.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="artist !=null  and artist != ''">
+         AND gm.artist = #{artist,jdbcType=VARCHAR}
+        </if>
+        <if test="url !=null  and url != ''">
+         AND gm.url = #{url,jdbcType=VARCHAR}
+        </if>
+        <if test="cover !=null  and cover != ''">
+         AND gm.cover = #{cover,jdbcType=VARCHAR}
+        </if>
+        <if test="lrc !=null  and lrc != ''">
+         AND gm.lrc = #{lrc,jdbcType=VARCHAR}
+        </if>
+        <if test="orderId !=null">
+         AND gm.order_id = #{orderId,jdbcType=INTEGER}
+        </if>
+        <if test="isDisplay !=null">
+         AND gm.is_display = #{isDisplay,jdbcType=INTEGER}
+        </if>
+        <if test="createTime !=null ">
+         AND gm.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateTime !=null ">
+         AND gm.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        </where>
+        order by gm.order_id asc
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectGpMusicById" parameterType="Integer" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertGpMusic" parameterType="GpMusic"  useGeneratedKeys="true" keyProperty="id">
+        insert into gp_music
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="name != null and name != ''">name,</if>
+        <if test="artist != null and artist != ''">artist,</if>
+        <if test="url != null and url != ''">url,</if>
+        <if test="cover != null and cover != ''">cover,</if>
+        <if test="lrc != null and lrc != ''">lrc,</if>
+        <if test="orderId != null">order_id,</if>
+        <if test="isDisplay != null">is_display,</if>
+        create_time,
+        <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="artist != null and artist != ''">#{artist},</if>
+        <if test="url != null and url != ''">#{url},</if>
+        <if test="cover != null and cover != ''">#{cover},</if>
+        <if test="lrc != null and lrc != ''">#{lrc},</if>
+        <if test="orderId != null">#{orderId},</if>
+        <if test="isDisplay != null">#{isDisplay},</if>
+        SYSDATE(),
+        <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertGpMusicList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="id">
+        insert into gp_music
+        (
+        name,artist,url,cover,lrc,order_id,is_display,create_time,update_time
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.name},#{item.artist},#{item.url},#{item.cover},#{item.lrc},#{item.orderId},#{item.isDisplay},#{item.createTime},#{item.updateTime}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteGpMusicById" parameterType="Integer">
+        delete FROM gp_music where id = #{id}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteGpMusicById2" parameterType="Integer">
+        update gp_music set del_flag='2' where id = #{id}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteGpMusicByIds" parameterType="Integer">
+        delete FROM gp_music where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteGpMusicByIds2" parameterType="Integer">
+        update gp_music set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateGpMusic" parameterType="GpMusic">
+        update gp_music
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="name != null  and name != ''">name = #{name},</if>
+        <if test="artist != null  and artist != ''">artist = #{artist},</if>
+        <if test="url != null  and url != ''">url = #{url},</if>
+        <if test="cover != null  and cover != ''">cover = #{cover},</if>
+        <if test="lrc != null  and lrc != ''">lrc = #{lrc},</if>
+        <if test="orderId != null">order_id = #{orderId},</if>
+        <if test="isDisplay != null">is_display = #{isDisplay},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        update_time = SYSDATE(),
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateGpMusicList" >
+        update gp_music set
+        id='',name='',artist='',url='',cover='',lrc='',order_id='',create_time='',update_time=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

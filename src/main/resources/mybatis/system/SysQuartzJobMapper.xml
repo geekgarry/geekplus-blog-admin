@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysQuartzJobMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysQuartzJob">
+        <result property="id" column="id" jdbcType="VARCHAR" />
+        <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="jobClassName" column="job_class_name" jdbcType="VARCHAR" />
+        <result property="cronExpression" column="cron_expression" jdbcType="VARCHAR" />
+        <result property="parameter" column="parameter" jdbcType="VARCHAR" />
+        <result property="description" column="description" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--quartz系统调度任务-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select 
+        id,create_by,create_time,del_flag,update_by,update_time,job_class_name,cron_expression,parameter,description,status
+         from sys_quartz_job
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysQuartzJobVo">
+        select 
+        sqj.id,sqj.create_by,sqj.create_time,sqj.del_flag,sqj.update_by,sqj.update_time,sqj.job_class_name,sqj.cron_expression,sqj.parameter,sqj.description,sqj.status
+         from sys_quartz_job sqj
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysQuartzJobList" parameterType="SysQuartzJob" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null  and id != ''">
+         AND id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="delFlag !=null ">
+         AND del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="jobClassName !=null  and jobClassName != ''">
+         AND job_class_name = #{jobClassName,jdbcType=VARCHAR}
+        </if>
+        <if test="cronExpression !=null  and cronExpression != ''">
+         AND cron_expression = #{cronExpression,jdbcType=VARCHAR}
+        </if>
+        <if test="parameter !=null  and parameter != ''">
+         AND parameter = #{parameter,jdbcType=VARCHAR}
+        </if>
+        <if test="description !=null  and description != ''">
+         AND description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null ">
+         AND status = #{status,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionSysQuartzJobList" parameterType="SysQuartzJob" resultMap="BaseResultMap">
+        <include refid="selectSysQuartzJobVo"/>
+        <where>
+        <if test="id !=null  and id != ''">
+         AND sqj.id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy !=null  and createBy != ''">
+         AND sqj.create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND sqj.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="delFlag !=null ">
+         AND sqj.del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="updateBy !=null  and updateBy != ''">
+         AND sqj.update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime !=null ">
+         AND sqj.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="jobClassName !=null  and jobClassName != ''">
+         AND sqj.job_class_name = #{jobClassName,jdbcType=VARCHAR}
+        </if>
+        <if test="cronExpression !=null  and cronExpression != ''">
+         AND sqj.cron_expression = #{cronExpression,jdbcType=VARCHAR}
+        </if>
+        <if test="parameter !=null  and parameter != ''">
+         AND sqj.parameter = #{parameter,jdbcType=VARCHAR}
+        </if>
+        <if test="description !=null  and description != ''">
+         AND sqj.description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null ">
+         AND sqj.status = #{status,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysQuartzJobById" parameterType="String" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysQuartzJob" parameterType="SysQuartzJob" >
+        insert into sys_quartz_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null and id != ''">id,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time,
+        <if test="delFlag != null">del_flag,</if>
+        <if test="updateBy != null and updateBy != ''">update_by,</if>
+        <if test="updateTime != null">update_time,</if>
+        <if test="jobClassName != null and jobClassName != ''">job_class_name,</if>
+        <if test="cronExpression != null and cronExpression != ''">cron_expression,</if>
+        <if test="parameter != null and parameter != ''">parameter,</if>
+        <if test="description != null and description != ''">description,</if>
+        <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null and id != ''">#{id},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        SYSDATE(),
+        <if test="delFlag != null">#{delFlag},</if>
+        <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+        <if test="updateTime != null">#{updateTime},</if>
+        <if test="jobClassName != null and jobClassName != ''">#{jobClassName},</if>
+        <if test="cronExpression != null and cronExpression != ''">#{cronExpression},</if>
+        <if test="parameter != null and parameter != ''">#{parameter},</if>
+        <if test="description != null and description != ''">#{description},</if>
+        <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysQuartzJobList" parameterType="java.util.List" >
+        insert into sys_quartz_job
+        (        id,create_by,create_time,del_flag,update_by,update_time,job_class_name,cron_expression,parameter,description,status
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (        #{item.id},#{item.createBy},#{item.createTime},#{item.delFlag},#{item.updateBy},#{item.updateTime},#{item.jobClassName},#{item.cronExpression},#{item.parameter},#{item.description},#{item.status}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysQuartzJobById" parameterType="String">
+        delete FROM sys_quartz_job where id = #{id}
+    </delete>
+
+    <!--逻辑删除,更新删除字段-->
+    <update id="updateDelFlagById" parameterType="String">
+        update sys_quartz_job set del_flag=1 where id = #{id}
+    </update>
+
+    <!--批量删除操作SQL-->
+    <delete id="deleteSysQuartzJobByIds" parameterType="String">
+        delete FROM sys_quartz_job where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除,批量更新删除字段-->
+    <update id="updateDelFlagByIds" parameterType="String">
+        update sys_quartz_job set del_flag=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+          #{id}
+        </foreach>
+    </update>
+
+    <!--更新操作SQL-->
+    <update id="updateSysQuartzJob" parameterType="SysQuartzJob">
+        update sys_quartz_job
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        <if test="delFlag != null ">del_flag = #{delFlag},</if>
+        <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        update_time = SYSDATE(),
+        <if test="jobClassName != null  and jobClassName != ''">job_class_name = #{jobClassName},</if>
+        <if test="cronExpression != null  and cronExpression != ''">cron_expression = #{cronExpression},</if>
+        <if test="parameter != null  and parameter != ''">parameter = #{parameter},</if>
+        <if test="description != null  and description != ''">description = #{description},</if>
+        <if test="status != null ">status = #{status},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysQuartzJobList" >
+        update sys_quartz_job set
+        id='',create_by='',create_time='',del_flag='',update_by='',update_time='',job_class_name='',cron_expression='',parameter='',description='',status=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.function.mapper.RemindSubTaskMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.function.entity.RemindSubTask">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="taskId" column="task_id" jdbcType="INTEGER" />
+        <result property="taskContent" column="task_content" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="isComplete" column="is_complete" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--提醒任务子任务-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select 
+        id,task_id,task_content,create_time,is_complete
+         from remind_sub_task
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectRemindSubTaskVo">
+        select 
+        rst.id,rst.task_id,rst.task_content,rst.create_time,rst.is_complete
+         from remind_sub_task rst
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectRemindSubTaskList" parameterType="RemindSubTask" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null ">
+         AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="taskId !=null ">
+         AND task_id = #{taskId,jdbcType=INTEGER}
+        </if>
+        <if test="taskContent !=null  and taskContent != ''">
+         AND task_content = #{taskContent,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isComplete !=null ">
+         AND is_complete = #{isComplete,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionRemindSubTaskList" parameterType="RemindSubTask" resultMap="BaseResultMap">
+        <include refid="selectRemindSubTaskVo"/>
+        <where>
+        <if test="id !=null ">
+         AND rst.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="taskId !=null ">
+         AND rst.task_id = #{taskId,jdbcType=INTEGER}
+        </if>
+        <if test="taskContent !=null  and taskContent != ''">
+         AND rst.task_content = #{taskContent,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND rst.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isComplete !=null ">
+         AND rst.is_complete = #{isComplete,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectRemindSubTaskById" parameterType="Integer" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertRemindSubTask" parameterType="RemindSubTask"  useGeneratedKeys="true" keyProperty="id">
+        insert into remind_sub_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="taskId != null">task_id,</if>
+        <if test="taskContent != null and taskContent != ''">task_content,</if>
+        create_time,
+        <if test="isComplete != null">is_complete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="taskId != null">#{taskId},</if>
+        <if test="taskContent != null and taskContent != ''">#{taskContent},</if>
+        SYSDATE(),
+        <if test="isComplete != null">#{isComplete},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertRemindSubTaskList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="id">
+        insert into remind_sub_task
+        (
+        task_id,task_content,create_time,is_complete
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.taskId},#{item.taskContent},#{item.createTime},#{item.isComplete}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteRemindSubTaskById" parameterType="Integer">
+        delete FROM remind_sub_task where id = #{id}
+    </delete>
+
+
+    <!--批量删除操作SQL-->
+    <delete id="deleteRemindSubTaskByIds" parameterType="Integer">
+        delete FROM remind_sub_task where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+
+    <!--更新操作SQL-->
+    <update id="updateRemindSubTask" parameterType="RemindSubTask">
+        update remind_sub_task
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="taskId != null ">task_id = #{taskId},</if>
+        <if test="taskContent != null  and taskContent != ''">task_content = #{taskContent},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        <if test="isComplete != null ">is_complete = #{isComplete},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateRemindSubTaskList" >
+        update remind_sub_task set
+        id='',task_id='',task_content='',create_time='',is_complete=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

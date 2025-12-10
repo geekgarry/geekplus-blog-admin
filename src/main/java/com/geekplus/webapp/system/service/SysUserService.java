@@ -1,0 +1,124 @@
+package com.geekplus.webapp.system.service;
+import com.geekplus.webapp.system.entity.SysUser;
+//import com.geekplus.core.Service;
+import java.util.List;
+import java.util.Set;
+
+
+/**
+ * 系统用户表 系统用户表
+ * Created by CodeGenerator on 2023/06/18.
+ */
+public interface SysUserService {
+
+    /**
+    * 增加
+    * @param sysUser
+    * @return 系统用户表
+    */
+    public Integer insertSysUser(SysUser sysUser);
+
+    /**
+     * 增加
+     * @param sysUser
+     * @return 系统用户表
+     */
+    public Integer insertSysUserEnCodePwd(SysUser sysUser);
+
+    /**
+    * 批量增加
+    * @param sysUserList
+    * @return 系统用户表
+    */
+    public Integer batchInsertSysUserList(List<SysUser> sysUserList);
+
+    /**
+    * 删除
+    * @param userId
+    */
+    public Integer deleteSysUserById(Long userId);
+
+    /**
+     * 逻辑删除
+     * @param userId
+     */
+    public Integer updateDelFlagById(Long userId);
+
+    /**
+    * 批量删除
+    */
+    public Integer deleteSysUserByIds(Long[] userIds);
+
+    /**
+     * 批量逻辑删除
+     */
+    public Integer updateDelFlagByIds(Long[] userIds);
+
+    /**
+    * 修改
+    * @param sysUser
+    */
+    public Integer updateSysUser(SysUser sysUser);
+
+    /**
+     * 修改密码
+     * @param sysUser
+     */
+    public Integer updateSysUserPwd(SysUser sysUser);
+
+    /**
+     * 修改用户头像
+     *
+     * @param username 用户名
+     * @param avatar 头像地址
+     * @return 结果
+     */
+    public boolean updateUserAvatar(String username, String avatar);
+
+    /**
+    * 批量修改
+    * @param userIds
+    */
+    public Integer batchUpdateSysUserList(Long[] userIds);
+
+    /**
+    * 查询全部
+    */
+    public List<SysUser> selectSysUserList(SysUser sysUser);
+
+    //通过密码和用户id查询
+    SysUser selectSysUserByPassword(SysUser sysUser);
+
+    /**
+    * 查询全部，用作联合查询使用(在基础上修改即可)
+    */
+    public List<SysUser> selectUnionSysUserList(SysUser sysUser);
+
+    /**
+    * 根据Id查询单条数据
+    */
+    public SysUser selectSysUserById(Long userId);
+
+    /**
+     *通过username查询用户信息和部门，不含角色
+     */
+    public SysUser sysUserLoginBy(String username);
+
+    /**
+     *通过username查询用户信息和部门以及角色
+     */
+    public SysUser getSysUserInfoBy(String username);
+
+    Set<String> getSysUserMenuPerms(Long userId);
+
+    public int updateSysUserByUsername(String username, String loginIp);
+
+    /**
+      * 根据用户，邮箱，手机查询是否存在用户
+      */
+    int selectCountByUsername(String username);
+
+    int selectCountByEmail(String email);
+
+    int selectCountByPhone(String phoneNumber);
+}

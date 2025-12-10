@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.function.mapper.UserAppointmentMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.function.entity.UserAppointment">
+        <result property="id" column="id" jdbcType="VARCHAR" />
+        <result property="userId" column="user_id" jdbcType="VARCHAR" />
+        <result property="scheduleAt" column="schedule_at" jdbcType="TIMESTAMP" />
+        <result property="payload" column="payload" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="CHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+        <result property="description" column="description" jdbcType="VARCHAR" />
+        <result property="jobType" column="job_type" jdbcType="CHAR" />
+    </resultMap>
+
+    <!--用户预约任务时间表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        id,user_id,schedule_at,payload,status,create_time,update_time,del_flag,description,job_type
+         from user_appointment
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectUserAppointmentVo">
+        select
+        ua.id,ua.user_id,ua.schedule_at,ua.payload,ua.status,ua.create_time,ua.update_time,ua.del_flag,ua.description,ua.job_type
+         from user_appointment ua
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectUserAppointmentList" parameterType="UserAppointment" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+        <if test="id !=null  and id != ''">
+         AND id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="userId !=null  and userId != ''">
+         AND user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="scheduleAt !=null ">
+         AND schedule_at = #{scheduleAt,jdbcType=TIMESTAMP}
+        </if>
+        <if test="payload !=null  and payload != ''">
+         AND payload = #{payload,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null  and status != ''">
+         AND status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateTime !=null ">
+         AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="delFlag !=null ">
+         AND del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="description !=null  and description != ''">
+         AND description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="jobType !=null  and jobType != ''">
+         AND job_type = #{jobType,jdbcType=CHAR}
+        </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionUserAppointmentList" parameterType="UserAppointment" resultMap="BaseResultMap">
+        <include refid="selectUserAppointmentVo"/>
+        <where>
+        <if test="id !=null  and id != ''">
+         AND ua.id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="userId !=null  and userId != ''">
+         AND ua.user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="scheduleAt !=null ">
+         AND ua.schedule_at = #{scheduleAt,jdbcType=TIMESTAMP}
+        </if>
+        <if test="payload !=null  and payload != ''">
+         AND ua.payload = #{payload,jdbcType=VARCHAR}
+        </if>
+        <if test="status !=null  and status != ''">
+         AND ua.status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="createTime !=null ">
+         AND ua.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateTime !=null ">
+         AND ua.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="delFlag !=null ">
+         AND ua.del_flag = #{delFlag,jdbcType=INTEGER}
+        </if>
+        <if test="description !=null  and description != ''">
+         AND ua.description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="jobType !=null  and jobType != ''">
+         AND ua.job_type = #{jobType,jdbcType=CHAR}
+        </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectUserAppointmentById" parameterType="String" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        id = #{id}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertUserAppointment" parameterType="UserAppointment" >
+        insert into user_appointment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null and id != ''">id,</if>
+        <if test="userId != null and userId != ''">user_id,</if>
+        <if test="scheduleAt != null">schedule_at,</if>
+        <if test="payload != null and payload != ''">payload,</if>
+        <if test="status != null and status != ''">status,</if>
+        create_time,
+        <if test="updateTime != null">update_time,</if>
+        <if test="delFlag != null">del_flag,</if>
+        <if test="description != null and description != ''">description,</if>
+        <if test="jobType != null and jobType != ''">job_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null and id != ''">#{id},</if>
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="scheduleAt != null">#{scheduleAt},</if>
+        <if test="payload != null and payload != ''">#{payload},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        SYSDATE(),
+        <if test="updateTime != null">#{updateTime},</if>
+        <if test="delFlag != null">#{delFlag},</if>
+        <if test="description != null and description != ''">#{description},</if>
+        <if test="jobType != null and jobType != ''">#{jobType},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertUserAppointmentList" parameterType="java.util.List" >
+        insert into user_appointment
+        (        id,user_id,schedule_at,payload,status,create_time,update_time,del_flag,description,job_type
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (        #{item.id},#{item.userId},#{item.scheduleAt},#{item.payload},#{item.status},#{item.createTime},#{item.updateTime},#{item.delFlag},#{item.description},#{item.jobType}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteUserAppointmentById" parameterType="String">
+        delete FROM user_appointment where id = #{id}
+    </delete>
+
+    <!--逻辑删除-->
+    <update id="updateDelFlagById" parameterType="String">
+        update user_appointment set del_flag=1 where id = #{id}
+    </update>
+
+    <!--删除操作SQL-->
+    <delete id="deleteUserAppointmentByIds" parameterType="String">
+        delete FROM user_appointment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             #{id}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <update id="deleteUserAppointmentByIds2" parameterType="String">
+        update user_appointment set del_flag=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--更新操作SQL-->
+    <update id="updateUserAppointment" parameterType="UserAppointment">
+        update user_appointment
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+        <if test="scheduleAt != null ">schedule_at = #{scheduleAt},</if>
+        <if test="payload != null  and payload != ''">payload = #{payload},</if>
+        <if test="status != null  and status != ''">status = #{status},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
+        update_time = SYSDATE(),
+        <if test="delFlag != null ">del_flag = #{delFlag},</if>
+        <if test="description != null  and description != ''">description = #{description},</if>
+        <if test="jobType != null  and jobType != ''">job_type = #{jobType},</if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateUserAppointmentList" >
+        update user_appointment set
+        id='',user_id='',schedule_at='',payload='',status='',create_time='',update_time='',del_flag='',description='',job_type=''
+         where id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--更新预约状态-->
+    <update id="updateStatus">
+        UPDATE user_appointment SET status=#{status}, update_time=NOW() WHERE id=#{id} and del_flag = 0
+    </update>
+
+    <!--查询用户自己的预约任务-->
+    <select id="userFindAllByUserId" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+         where user_id= #{userId} and del_flag = 0 ORDER BY create_time DESC
+    </select>
+</mapper>

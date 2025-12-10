@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: GeekPlusBlog
+  profiles:
+    active: prod
+    #active: dev
