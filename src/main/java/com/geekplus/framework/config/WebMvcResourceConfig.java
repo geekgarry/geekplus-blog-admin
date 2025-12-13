@@ -143,8 +143,8 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
         //此方法返回可用处理器的虚拟机的最大数量; 不小于1
         int core = Runtime.getRuntime().availableProcessors();
         t.setCorePoolSize(core);
-        t.setMaxPoolSize(core*2+2);
-        t.setQueueCapacity(25);
+        t.setMaxPoolSize(core*3+2);
+        t.setQueueCapacity(200);
         t.setKeepAliveSeconds(200);
         t.setThreadNamePrefix("Plus-Thread-");//线程名称前缀
         // 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者

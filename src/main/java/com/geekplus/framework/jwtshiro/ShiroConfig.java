@@ -112,7 +112,6 @@ public class ShiroConfig {
         map.put("/chatAIApp/**","anon");
         map.put("/chatAITopic/**","anon");
         map.put("/profile/**","invalidRequest,anon");
-        map.put("/profile/avatar/**","invalidRequest,jwt");
         map.put("/common/getQRCode**","anon");
         map.put("/common/download**","anon");
         map.put("/common/download/resource**","anon");
